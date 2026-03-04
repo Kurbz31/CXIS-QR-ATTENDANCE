@@ -47,8 +47,19 @@ include 'navbar.php';
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script>
 let lastScannedCode = '';
+let lastScanTime = 0; // timestamp in ms
 
 function onScanSuccess(decodedText) {
+    const now = Date.now();
+
+    // Prevent duplicate scans within 8 seconds
+    if(decodedText === lastScannedCode && (now - lastScanTime < 8000)) {
+        return; // ignore repeated scan
+    }
+
+    lastScannedCode = decodedText;
+    lastScanTime = now;
+
     fetch('save_attendance.php', {
         method: 'POST',
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -67,11 +78,8 @@ function onScanSuccess(decodedText) {
         document.getElementById('emp_dept').textContent = data.department;
         document.getElementById('scan_msg').textContent = data.message;
 
-        // Remember last scanned code
-        lastScannedCode = data.code;
-
-        // Refresh attendance table
-        fetchAttendanceTable();
+        // Refresh attendance table and highlight last scan
+        fetchAttendanceTable(data.code);
     });
 }
 
@@ -84,7 +92,7 @@ new Html5QrcodeScanner("reader", {
 }).render(onScanSuccess);
 
 // Function to refresh attendance table
-function fetchAttendanceTable(){
+function fetchAttendanceTable(recentCode = '') {
     fetch('fetch_shift_attendance.php')
     .then(res => res.json())
     .then(data => {
@@ -97,12 +105,10 @@ function fetchAttendanceTable(){
             data.forEach(row => {
                 const tr = document.createElement('tr');
 
-                // Color-code IN/OUT
+                // Color-code IN/OUT and highlight last scanned row
                 let bgColor = '';
-                if(row.time_out && row.code === lastScannedCode){
-                    bgColor = '#d0ebff'; // Blue for recent OUT
-                } else if(!row.time_out && row.code === lastScannedCode){
-                    bgColor = '#d4edda'; // Green for recent IN
+                if(row.employee_code === recentCode) {
+                    bgColor = row.time_out ? '#d0ebff' : '#d4edda'; // Blue=OUT, Green=IN
                 }
 
                 tr.style.backgroundColor = bgColor;

@@ -1,42 +1,47 @@
 <?php
 include 'db.php';
 
-// 1️⃣ Set month to export (default: current month)
-$month = isset($_GET['month']) ? $_GET['month'] : date('Y-m');
-$start_date = $month . "-01";
-$end_date = date("Y-m-t", strtotime($start_date)); // last day of month
+// 1️⃣ Get filter parameters from GET
+$from_date = isset($_GET['from_date']) ? $_GET['from_date'] : date('Y-m-01');
+$to_date = isset($_GET['to_date']) ? $_GET['to_date'] : date('Y-m-d');
+$emp_id = isset($_GET['emp_id']) ? (int)$_GET['emp_id'] : 0;
 
-// 2️⃣ Set CSV headers
+// 2️⃣ CSV headers
 header('Content-Type: text/csv; charset=utf-8');
-header('Content-Disposition: attachment; filename=attendance_'.$month.'.csv');
+header('Content-Disposition: attachment; filename=attendance_export.csv');
 
 $output = fopen('php://output', 'w');
 
 // 3️⃣ Column headers
 fputcsv($output, ['Employee Code', 'Employee Name', 'Department', 'Date', 'Time IN', 'Time OUT']);
 
-// 4️⃣ Query attendance
-$result = $conn->query("
-    SELECT a.*, e.fullname, e.department 
+// 4️⃣ Build query
+$where = "a.date BETWEEN '$from_date' AND '$to_date'";
+if ($emp_id > 0) {
+    $where .= " AND a.employee_id = $emp_id";
+}
+
+$sql = "
+    SELECT a.*, e.fullname, e.department, e.employee_code
     FROM attendance a
     JOIN employees e ON a.employee_id = e.id
-    WHERE a.date BETWEEN '$start_date' AND '$end_date'
-    ORDER BY a.employee_id, a.date ASC
-");
+    WHERE $where
+    ORDER BY e.fullname ASC, a.date ASC
+";
 
-// 5️⃣ Check for errors
+$result = $conn->query($sql);
 if (!$result) {
     die("Query Error: " . $conn->error);
 }
 
-// 6️⃣ Write rows
+// 5️⃣ Write rows
 while ($row = $result->fetch_assoc()) {
     fputcsv($output, [
         $row['employee_code'],
         $row['fullname'],
         $row['department'],
         $row['date'],
-        "'".$row['time_in'],   // Force Excel to treat as text
+        "'".$row['time_in'],   // force Excel to treat as text
         "'".$row['time_out'] ?? ''
     ]);
 }
