@@ -1,49 +1,43 @@
 <?php
 include 'db.php';
 
-// New BPO shift: 5 PM → 12 PM next day
-$shift_start_time = '17:00:00'; // 5 PM
-$shift_end_time   = '12:00:00'; // 12 PM next day
+header('Content-Type: application/json');
 
-$now_time = date('H:i:s');
-$today = date('Y-m-d');
-$yesterday = date('Y-m-d');
+$current_time = date('H:i:s');
 
-// Determine shift start/end dates
-if ($now_time >= $shift_start_time) {
-    // After 5 PM → shift is today 5 PM → tomorrow 12 PM
-    $shift_start_datetime = "$today $shift_start_time";
-    $shift_end_datetime   = date('Y-m-d H:i:s', strtotime("$today $shift_end_time +1 day"));
+// Determine correct shift date range
+if ($current_time >= '17:00:00') {
+    // Between 5PM and 11:59PM
+    $start_date = date('Y-m-d');
+    $end_date = date('Y-m-d', strtotime('+1 day'));
 } else {
-    // Before 12 PM → shift is yesterday 5 PM → today 12 PM
-    $shift_start_datetime = "$yesterday $shift_start_time";
-    $shift_end_datetime   = "$today $shift_end_time";
+    // Between 12:00AM and 11:59AM
+    $start_date = date('Y-m-d', strtotime('-1 day'));
+    $end_date = date('Y-m-d');
 }
 
-// Fetch attendance in the shift window
 $sql = "
 SELECT a.*, e.fullname, e.department, e.employee_code
 FROM attendance a
 JOIN employees e ON a.employee_id = e.id
 WHERE 
-    CONCAT(a.date, ' ', a.time_in) BETWEEN '$shift_start_datetime' AND '$shift_end_datetime'
-ORDER BY CONCAT(a.date, ' ', a.time_in) ASC
+    (
+        (a.date = '$start_date' AND a.time_in >= '17:00:00')
+        OR
+        (a.date = '$end_date' AND a.time_in <= '12:00:00')
+    )
+ORDER BY a.time_in DESC
 ";
 
-$res = $conn->query($sql);
+$result = $conn->query($sql);
 
-$data = [];
-if ($res && $res->num_rows > 0) {
-    while ($row = $res->fetch_assoc()) {
-        $data[] = [
-            'employee_code' => $row['employee_code'],
-            'fullname' => $row['fullname'],
-            'department' => $row['department'],
-            'time_in' => date('h:i A', strtotime($row['time_in'])),
-            'time_out' => $row['time_out'] ? date('h:i A', strtotime($row['time_out'])) : ''
-        ];
+$rows = [];
+
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
     }
 }
 
-header('Content-Type: application/json');
-echo json_encode($data);
+echo json_encode($rows);
+?>
