@@ -1,4 +1,6 @@
 <?php
+if (!isset($_SESSION)) session_start();
+
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
@@ -23,8 +25,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 /* Logo */
 .navbar .logo img {
-    height: 50px;
-    margin: 5px 0;
+    height: 80px;
+    
     cursor: pointer;
 }
 
@@ -97,21 +99,28 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <a href="scanner.php" class="<?= $current_page == 'scanner.php' ? 'active' : '' ?>">
             <i class="fas fa-qrcode"></i>Scanner
         </a>
-        <a href="add_employee.php" class="<?= $current_page == 'add_employee.php' ? 'active' : '' ?>">
-            <i class="fas fa-user-plus"></i>Add Employee
-        </a>
+        
         <a href="view_employees.php" class="<?= $current_page == 'view_employees.php' ? 'active' : '' ?>">
             <i class="fas fa-users"></i>Employees
         </a>
-        <a href="export_excel.php" class="<?= $current_page == 'export_excel.php' ? 'active' : '' ?>">
-            <i class="fas fa-file-csv"></i>Export
+
+        <?php if($_SESSION['role'] == 'admin'): ?>
+            <a href="hr_dashboard.php" class="<?= $current_page == 'hr_dashboard.php' ? 'active' : '' ?>">
+            <i class="fas fa-clipboard-list"></i>HR Dashboard
+        </a>
+            <a href="add_employee.php" class="<?= $current_page == 'add_employee.php' ? 'active' : '' ?>">
+            <i class="fas fa-user-plus"></i>Add Employee
+        </a>
+        <?php endif; ?>
+
         </a>
         <a href="index.php" class="<?= $current_page == 'index.php' ? 'active' : '' ?>">
             <i class="fas fa-tachometer-alt"></i>Dashboard
         </a>
-        <a href="hr_dashboard.php" class="<?= $current_page == 'hr_dashboard.php' ? 'active' : '' ?>">
-            <i class="fas fa-clipboard-list"></i>HR Dashboard
-        </a>
+        <a href="logout.php" class="btn-logout">
+    <i class="fas fa-right-from-bracket"></i> Logout
+</a>
+        
         <!-- Hamburger icon for mobile -->
         <a href="javascript:void(0);" class="icon" onclick="toggleNavbar()">
             <i class="fas fa-bars"></i>
