@@ -1,5 +1,12 @@
 <?php
 include 'db.php';
+
+include 'auth.php';
+
+if ($_SESSION['role'] != 'admin') {
+    header("Location: scanner.php");
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -7,9 +14,12 @@ include 'db.php';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>HR Attendance Dashboard - CXIS</title>
 <style>
-    body { font-family: Arial, sans-serif; margin:0; background:#e9f2ff; }
+    @import url('https://fonts.googleapis.com');
+
+    body { font-family: 'Poppins', sans-serif; margin:0; background:#e9f2ff; }
     h2 { text-align:center; color:#0d6efd; margin-bottom:20px; }
     section.filter-section {
         max-width: 900px;
@@ -22,10 +32,14 @@ include 'db.php';
         align-items:center;
     }
     select, input[type="date"] {
-        padding:8px; border-radius:5px; border:1px solid #0d6efd;
+        padding:10px; 
+        border-radius:10px; 
+        border:1px solid #0d6efd;
+        font-size: 15px;
+        font-weight: bold;
     }
     button {
-        padding:8px 15px; border:none; border-radius:5px;
+        padding:15px 18px; border:none; border-radius:10px;
         background:#0d6efd; color:white; font-weight:bold;
         cursor:pointer; transition:.3s;
     }
@@ -76,6 +90,7 @@ include 'db.php';
 </style>
 </head>
 <body>
+
 
 <?php include 'navbar.php'; ?>
 

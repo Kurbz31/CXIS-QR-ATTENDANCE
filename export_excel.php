@@ -1,6 +1,15 @@
 <?php
 include 'db.php';
 
+
+include 'auth.php';
+
+if ($_SESSION['role'] != 'admin') {
+    header("Location: scanner.php");
+    exit;
+}
+
+
 // 1️⃣ Get filter parameters from GET
 $from_date = isset($_GET['from_date']) ? $_GET['from_date'] : date('Y-m-01');
 $to_date = isset($_GET['to_date']) ? $_GET['to_date'] : date('Y-m-d');
