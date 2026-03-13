@@ -31,7 +31,7 @@ if ($_SESSION['role'] != 'admin') {
         justify-content:center;
         align-items:center;
     }
-    select, input[type="date"] {
+    select, input[type="date"], input[type="text"] {
         padding:10px; 
         border-radius:10px; 
         border:1px solid #0d6efd;
@@ -39,11 +39,12 @@ if ($_SESSION['role'] != 'admin') {
         font-weight: bold;
     }
     button {
-        padding:15px 18px; border:none; border-radius:10px;
-        background:#0d6efd; color:white; font-weight:bold;
+        padding:10px; border:1px solid #0d6efd; border-radius:10px;
+        background:white; color:#0d6efd; font-weight:bold;
         cursor:pointer; transition:.3s;
+        font-size: 15px;
     }
-    button:hover { background:#084298; }
+    button:hover { background:#e9f2ff; }
     section.profile-preview {
         max-width:900px;
         margin: 0 auto 20px auto;
@@ -91,7 +92,6 @@ if ($_SESSION['role'] != 'admin') {
 </head>
 <body>
 
-
 <?php include 'navbar.php'; ?>
 
 <h2>HR Attendance Dashboard</h2>
@@ -102,14 +102,21 @@ if ($_SESSION['role'] != 'admin') {
     <?php
     $employees = $conn->query("SELECT id, fullname, employee_code, department, profile_pic FROM employees ORDER BY fullname");
     $selected_emp_id = $_POST['employee_id'] ?? '';
+    $emp_id = '';
+    if (!empty($selected_emp_id)) {
+        if (preg_match('/ - (\d+)$/', $selected_emp_id, $matches)) {
+            $emp_id = $matches[1];
+        }
+    }
     ?>
-    <select name="employee_id" onchange="this.form.submit()">
-        <option value="">All Employees</option>
-        <?php while($emp=$employees->fetch_assoc()) {
-            $selected = ($selected_emp_id==$emp['id'])?'selected':'';
-            echo "<option value='{$emp['id']}' $selected>{$emp['fullname']} ({$emp['employee_code']})</option>";
+    <input type="text" name="employee_id" list="employees" placeholder="Search Employee" value="<?= htmlspecialchars($selected_emp_id) ?>">
+    <datalist id="employees">
+        <?php 
+        $employees->data_seek(0); // Reset pointer
+        while($emp=$employees->fetch_assoc()) {
+            echo "<option value='{$emp['fullname']} ({$emp['employee_code']}) - {$emp['id']}'></option>";
         } ?>
-    </select>
+    </datalist>
     <input type="date" name="from_date" value="<?= $_POST['from_date'] ?? date('Y-m-01') ?>">
     <input type="date" name="to_date" value="<?= $_POST['to_date'] ?? date('Y-m-d') ?>">
     <button type="submit">Search</button>
@@ -125,8 +132,7 @@ $employee_info = null;
 
 if ($_SERVER['REQUEST_METHOD']==='POST') {
     $where = "a.date BETWEEN '$from_date' AND '$to_date'";
-    if (!empty($_POST['employee_id'])) {
-        $emp_id = (int)$_POST['employee_id'];
+    if (!empty($emp_id)) {
         $where .= " AND a.employee_id = $emp_id";
         // fetch profile for preview
         $res_emp = $conn->query("SELECT fullname, employee_code, department, profile_pic FROM employees WHERE id=$emp_id");
@@ -204,8 +210,8 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
 
 <!-- Export Buttons -->
 <a class="export-btn" href="export_excel.php?from_date=<?= $from_date ?>&to_date=<?= $to_date ?>">Export All</a>
-<?php if(!empty($_POST['employee_id'])): ?>
-<a class="export-btn" href="export_excel.php?from_date=<?= $from_date ?>&to_date=<?= $to_date ?>&emp_id=<?= (int)$_POST['employee_id'] ?>">Export Individual</a>
+<?php if(!empty($emp_id)): ?>
+<a class="export-btn" href="export_excel.php?from_date=<?= $from_date ?>&to_date=<?= $to_date ?>&emp_id=<?= $emp_id ?>">Export Individual</a>
 <?php endif; ?>
 </section>
 <?php elseif($_SERVER['REQUEST_METHOD']==='POST'): ?>

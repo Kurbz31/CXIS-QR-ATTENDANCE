@@ -74,11 +74,11 @@ include 'auth.php';
         <?php
         $date = date('Y-m-d');
         $att_result = $conn->query("
-            SELECT a.*, e.fullname, e.department, e.employee_code
-            FROM attendance a
-            JOIN employees e ON a.employee_id = e.id
-            WHERE a.date='$date'
-            ORDER BY a.time_in ASC
+            SELECT e.id, e.fullname, e.department, e.employee_code, 
+                   a.time_in, a.time_out
+            FROM employees e
+            LEFT JOIN attendance a ON e.id = a.employee_id AND a.date='$date'
+            ORDER BY e.fullname ASC
         ");
         if (!$att_result) {
             die("Query Error: " . $conn->error);
@@ -91,6 +91,7 @@ include 'auth.php';
                     <th>Employee Code</th>
                     <th>Name</th>
                     <th>Department</th>
+                    <th>Status</th>
                     <th>Time IN</th>
                     <th>Time OUT</th>
                 </tr>
@@ -99,12 +100,15 @@ include 'auth.php';
                 <?php
                 $i = 1;
                 while ($row = $att_result->fetch_assoc()) {
+                    $status = $row['time_in'] ? 'Present' : 'Absent';
+                    $status_color = $row['time_in'] ? 'color: #28a745; font-weight: bold;' : 'color: #dc3545; font-weight: bold;';
                     echo "<tr>
                             <td>{$i}</td>
                             <td>{$row['employee_code']}</td>
                             <td>{$row['fullname']}</td>
                             <td>{$row['department']}</td>
-                            <td>{$row['time_in']}</td>
+                            <td style='{$status_color}'>{$status}</td>
+                            <td>" . ($row['time_in'] ?? '---') . "</td>
                             <td>" . ($row['time_out'] ?? '---') . "</td>
                           </tr>";
                     $i++;
