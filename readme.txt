@@ -1,10 +1,10 @@
-# CXIS QR Attendance System
+ CXIS QR Attendance System
 
-## Description
+ Description
 
 A web-based employee attendance management system that utilizes QR codes for efficient and secure check-in and check-out processes. This system is designed for CXIS to streamline employee attendance tracking.
 
-## Features
+ Features
 
 - **Employee Management**: Add, edit, and view employee details including profile pictures and department information.
 - **QR Code Generation**: Automatically generate unique QR codes for each employee for easy identification.
@@ -16,7 +16,7 @@ A web-based employee attendance management system that utilizes QR codes for eff
 - **User Authentication**: Secure login system for HR and administrators.
 - **Shift Attendance**: Support for shift-based attendance tracking.
 
-## Requirements
+ Requirements
 
 - PHP 7.4 or higher
 - MySQL 5.7 or higher
@@ -24,16 +24,16 @@ A web-based employee attendance management system that utilizes QR codes for eff
 - phpqrcode library (included in the project)
 - Modern web browser with JavaScript enabled
 
-## Installation
+ Installation
 
-1. **Download/Clone the Project**:
+1. Download/Clone the Project:
    - Place the project files in your web server's document root directory (e.g., `htdocs` for XAMPP or `www` for WAMP).
 
-2. **Database Setup**:
+2. Database Setup:
    - Create a new MySQL database (e.g., `company_attendance`).
    - Import the database schema using the SQL commands provided below or run the `company_attendance.sql` file.
 
-3. **Configuration**:
+3. Configuration:
    - Open `db.php` and update the database connection details:
      ```php
      $servername = "localhost";
@@ -42,7 +42,7 @@ A web-based employee attendance management system that utilizes QR codes for eff
      $dbname = "company_attendance";
      ```
 
-4. **Permissions**:
+4. Permissions:
    - Ensure the following directories are writable by the web server:
      - `uploads/` (for employee profile pictures)
      - `qrcodes/` (for generated QR codes)
@@ -51,35 +51,35 @@ A web-based employee attendance management system that utilizes QR codes for eff
 5. **Access the Application**:
    - Open your web browser and navigate to `http://localhost/CXIS-QR-ATTENDANCE/` (adjust the path as needed).
 
-## Usage
+ Usage
 
-1. **Login**:
+1. Login:
    - Access the login page and enter your credentials.
 
-2. **Employee Management**:
+2. Employee Management:
    - Navigate to the employee management section.
    - Add new employees with their details.
    - Edit existing employee information.
 
-3. **QR Code Generation**:
+3. QR Code Generation:
    - Generate QR codes for employees from the employee list.
 
-4. **Attendance Scanning**:
+4. Attendance Scanning:
    - Use the scanner page to scan employee QR codes.
    - Employees can scan their codes to record time-in and time-out.
 
-5. **Dashboard**:
+5. Dashboard:
    - View the attendance dashboard for real-time status.
    - Monitor daily attendance records.
 
-6. **Reports**:
+6. Reports:
    - Export attendance data to Excel for further analysis.
 
-## Database Schema
+ Database Schema
 
 The system uses two main tables:
 
-### Employees Table
+ Employees Table
 ```sql
 CREATE TABLE `employees` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -93,7 +93,7 @@ CREATE TABLE `employees` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-### Attendance Table
+ Attendance Table
 ```sql
 CREATE TABLE `attendance` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -107,7 +107,7 @@ CREATE TABLE `attendance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-## Technologies Used
+ Technologies Used
 
 - **Backend**: PHP
 - **Database**: MySQL
@@ -115,7 +115,7 @@ CREATE TABLE `attendance` (
 - **QR Code Library**: phpqrcode
 - **Styling**: Custom CSS with responsive design
 
-## File Structure
+ File Structure
 
 - `index.php`: Main attendance dashboard
 - `login.php`: User authentication
@@ -136,28 +136,28 @@ CREATE TABLE `attendance` (
 - `qrcodes/`: Generated QR codes
 - `img/`: Static images
 
-## Security Notes
+ Security Notes
 
 - Ensure your web server is configured securely.
 - Use HTTPS in production.
 - Regularly update PHP and MySQL for security patches.
 - Implement proper user access controls.
 
-## Troubleshooting
+ Troubleshooting
 
-- **Database Connection Issues**: Verify credentials in `db.php`.
-- **Permission Errors**: Check write permissions for upload directories.
-- **QR Code Not Generating**: Ensure GD library is enabled in PHP.
-- **Scanner Not Working**: Ensure camera access is allowed in the browser.
+- Database Connection Issues**: Verify credentials in `db.php`.
+- Permission Errors**: Check write permissions for upload directories.
+- QR Code Not Generating**: Ensure GD library is enabled in PHP.
+- Scanner Not Working**: Ensure camera access is allowed in the browser.
 
-## Contributing
+Contributing
 
 If you'd like to contribute to this project, please fork the repository and submit a pull request.
 
-## License
+ License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Support
+ Support
 
 For support or questions, please contact the development team.
