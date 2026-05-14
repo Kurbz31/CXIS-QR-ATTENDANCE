@@ -20,13 +20,41 @@ if (!$result || $result->num_rows == 0) {
 $row = $result->fetch_assoc();
 ?>
 
-<div style="width:300px; border:1px solid #000; padding:10px; text-align:center; margin-top:20px;">
-    <h3>CXIS Company</h3>
-    <img src="<?php echo $row['qr_path']; ?>" width="150"><br>
-    <b><?php echo $row['fullname']; ?></b><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Card - <?php echo $row['fullname']; ?></title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #e9f2ff; margin: 0; }
+        .id-card {
+            width: 300px;
+            max-width: 90%;
+            border: 2px solid #0d6efd;
+            border-radius: 10px;
+            background: #fff;
+            padding: 20px;
+            text-align: center;
+            margin: 40px auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+        .id-card img { max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+
+<div class="id-card">
+    <h3 style="color:#0d6efd;">CXIS Company</h3>
+    <img src="<?php echo $row['qr_path']; ?>" width="150"><br><br>
+    <b style="font-size:18px;"><?php echo $row['fullname']; ?></b><br>
     <?php echo $row['department']; ?><br>
-    Code: <?php echo $row['employee_code']; ?>
+    <small>Code: <?php echo $row['employee_code']; ?></small>
 </div>
+
+</body>
+</html>
 
 <button onclick="window.print()">Print</button>
 

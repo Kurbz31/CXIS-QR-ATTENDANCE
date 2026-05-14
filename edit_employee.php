@@ -63,19 +63,25 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 ?>
 
 <!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Edit Employee</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Employee</title>
 
 <style>
 
 body{
 font-family:Arial;
 background:#e9f2ff;
+margin:0;
 }
 
 .container{
 max-width:500px;
+width:90%;
+box-sizing:border-box;
 margin:40px auto;
 background:#f0f8ff;
 padding:25px;
@@ -95,6 +101,7 @@ margin-top:10px;
 margin-bottom:15px;
 border-radius:5px;
 border:1px solid #0d6efd;
+box-sizing:border-box;
 }
 
 button{

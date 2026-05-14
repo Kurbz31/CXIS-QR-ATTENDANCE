@@ -63,9 +63,12 @@ body {
 .login-logo {
     margin-top: 50px;
     margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
 }
 .login-logo img {
-    width: 600px;
+    width: 90%;
+    max-width: 600px;
     height: auto;
 }
 
@@ -120,8 +123,9 @@ p.error {
 }
 
 @media (max-width: 500px) {
-    .login-logo img {
-        width: 180px;
+    .login-container {
+        width: 90%;
+        padding: 20px 15px;
     }
 }
 </style>

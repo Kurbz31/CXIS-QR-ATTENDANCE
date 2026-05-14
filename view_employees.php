@@ -134,6 +134,8 @@ margin-bottom:20px;
 .search-box input{
 padding:10px;
 width:280px;
+max-width:100%;
+box-sizing:border-box;
 border:1px solid #0d6efd;
 border-radius:5px;
 }
@@ -267,6 +269,17 @@ background:#28a745;
 
 @media screen and (max-width:768px){
 
+.search-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    padding: 0 15px;
+}
+.search-box input {
+    width: 100%;
+}
+
 thead{ display:none; }
 
 table,tbody,tr,td{
@@ -392,7 +405,7 @@ Reset
 <i class="fas fa-download"></i>
 </a>
 
-<a href="delete_employee.php?id=<?= $row['id']; ?>"
+<a href="view_employees.php?delete_id=<?= $row['id']; ?>"
 class="btn delete"
 onclick="return confirm('Delete this employee?');">
 <i class="fas fa-trash"></i>

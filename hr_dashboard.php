@@ -37,6 +37,8 @@ if ($_SESSION['role'] != 'admin') {
         border:1px solid #0d6efd;
         font-size: 15px;
         font-weight: bold;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     button {
         padding:10px; border:1px solid #0d6efd; border-radius:10px;

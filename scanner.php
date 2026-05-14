@@ -8,6 +8,7 @@ include 'auth.php';
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Attendance Scanner</title>
 
 <style>
@@ -43,7 +44,11 @@ body{
 /* Employee Profile */
 #employee_info{
     width:400px;
-    height:400px;
+    max-width:90%;
+    height:auto;
+    min-height:400px;
+    padding:20px;
+    box-sizing:border-box;
     border:2px solid #0d6efd;
     border-radius:10px;
     background-color:#f0f8ff;
@@ -57,8 +62,10 @@ body{
 /* Profile Picture */
 #profile_pic{
     border-radius:50%;
-    width:250px;
-    height:250px;
+    width:100%;
+    max-width:250px;
+    height:auto;
+    aspect-ratio:1/1;
     object-fit:cover;
     margin-bottom:15px;
 }
@@ -115,6 +122,11 @@ body{
     width:100%;
     border-collapse:collapse;
     font-family:Arial, sans-serif;
+}
+.attendance-table th, .attendance-table td {
+    padding:10px;
+    border:1px solid #0d6efd;
+    text-align:center;
 }
 
 /* Table Head */
